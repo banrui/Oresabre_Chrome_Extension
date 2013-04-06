@@ -11,6 +11,17 @@
     "default_icon" : "images/icon.gif",
     "popup" : "popup.html"
   },
+  "content_scripts" : [
+    {
+      "matches" : [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js" : ["jquery-1.9.1.min.js", "contentscript.js"],
+      "run_at" : "document_idle",
+      "all_frames" : false
+    }
+  ],
   "options_page": "options.html",
   "web_accessible_resources" : ["images/48.png"]
 }
