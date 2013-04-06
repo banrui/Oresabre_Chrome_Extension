@@ -4,24 +4,13 @@
   "description":
     "Oresabre Extention",
   "icons": {"16": "images/16.gif", "48": "images/48.gif", "128": "images/128.gif"},
-  "permissions": ["tabs", "http://www.google.com/*", "notifications"],
-  "background": { "scripts": ["background.js"] },
+  "permissions": ["tabs", "http://www.google.com/*", "http://*/*", "https://*/*", "notifications"],
+  "background": { "scripts": ["jquery-1.9.1.min.js", "notification.js", "background.js"] },
   "manifest_version": 2,
   "browser_action" : {
     "default_icon" : "images/icon.gif",
     "popup" : "popup.html"
   },
-  "content_scripts" : [
-    {
-      "matches" : [
-        "http://*/*",
-        "https://*/*"
-      ],
-      "js" : ["jquery-1.9.1.min.js", "contentscript.js"],
-      "run_at" : "document_idle",
-      "all_frames" : false
-    }
-  ],
   "options_page": "options.html",
   "web_accessible_resources" : ["images/48.png"]
 }
