@@ -1,10 +1,19 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
-	<head>
-		<meta charaset="UTF8">
-		<link href="stylesheet/global.css" rel="stylesheet" type="text/css">
-	</head>	
-	<body>
-		<p>Hello, Notification!!</p>
-	</body>
+<head>
+<style type="text/css">
+body {
+    display: none;
+}
+</style>
+</head>
+<body onload="openOptions()">
+</body>
 </html>
+<script type="text/javascript">
+function openOptions() {
+    chrome.tabs.create({
+        url: "options.html"
+    });
+}
+</script>

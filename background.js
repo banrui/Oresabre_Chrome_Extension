@@ -12,30 +12,20 @@ function show() {
 
 if (!localStorage.isInitialized) {
   localStorage.isActivated = true;
-  localStorage.frequency = 1;
+  localStorage.frequency = 10;
   localStorage.isInitialized = true;
 }
 
 if (window.webkitNotifications) {
   if (JSON.parse(localStorage.isActivated)) {
     show();
-    notification.ondisplay = function() {
-      setTimeout(function() {
-        notification.cancel();
-      }, 5000);
-    };
   }
   var interval = 0;
   setInterval(function() {
     interval = interval + 10;
     if (JSON.parse(localStorage.isActivated) && localStorage.frequency <= interval) {
       show();
-      notification.ondisplay = function() {
-        setTimeout(function() {
-          notification.cancel();
-        }, 5000);
-      };
       interval = 0;
     }
-  }, 30000);
+  }, 10000);
 }
