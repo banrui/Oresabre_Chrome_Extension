@@ -2,7 +2,7 @@
   "name": "Oresabre Notification",
   "version": "1",
   "description":
-    "Oresabre Extention",
+  "Oresabre Extention",
   "icons": {"16": "images/16.gif", "48": "images/48.gif", "128": "images/128.gif"},
   "permissions": ["tabs", "http://www.google.com/*", "http://*/*", "https://*/*", "notifications"],
   "background": { "scripts": ["jquery-1.9.1.min.js", "notification.js", "background.js"] },

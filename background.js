@@ -1,31 +1,31 @@
 function show() {
-	chrome.tabs.getSelected(null, function(tab) {  
-  		if (tab.url.indexOf('http://www.youtube.com/watch') == 0 || tab.url.indexOf('https://www.youtube.com/watch') == 0) {  
-    		var title = getYouTubeTitle(tab);
- 			requestKeyPhrase(title);
- 			if(localStorage.isItem) {
- 				var itemname = localStorage.getItem("itemname");
-	  			var imgurl   = localStorage.getItem("imgurl");
-  				var url      = localStorage.getItem("url");
-  				var price    = localStorage.getItem("price");	
-				var data = { image: '', text: '', url: '', price: ''};
-				data.image = imgurl;
-				data.text  = itemname;
-				data.url   = url;
-				data.price = price;
-			}
+  chrome.tabs.getSelected(null, function(tab) {  
+    if (tab.url.indexOf('http://www.youtube.com/watch') == 0 || tab.url.indexOf('https://www.youtube.com/watch') == 0) {  
+      var title = getYouTubeTitle(tab);
+      requestKeyPhrase(title);
+      if(localStorage.isItem) {
+ 	var itemname = localStorage.getItem("itemname");
+	var imgurl   = localStorage.getItem("imgurl");
+  	var url      = localStorage.getItem("url");
+  	var price    = localStorage.getItem("price");	
+	var data = { image: '', text: '', url: '', price: ''};
+	data.image = imgurl;
+	data.text  = itemname;
+	data.url   = url;
+	data.price = price;
+      }
 
- 			var notification = window.webkitNotifications.createHTMLNotification(
-  			  'notification.html#' + encodeURIComponent(JSON.stringify(data))
-  			);
-  			notification.show();
-  			notification.ondisplay = function() {
-    			setTimeout(function() {
-      				notification.cancel();
-    			}, 10000);
-  			};
-  		} 
-	});
+      var notification = window.webkitNotifications.createHTMLNotification(
+  	'notification.html#' + encodeURIComponent(JSON.stringify(data))
+      );
+      notification.show();
+      notification.ondisplay = function() {
+    	setTimeout(function() {
+      	  notification.cancel();
+    	}, 10000);
+      };
+    } 
+  });
 }
 
 if (!localStorage.isInitialized) {
@@ -69,22 +69,22 @@ function insertRakutenProducts(phrase) {
     timeout:1000,
     cache:false,
     error:function(){
-		localStorage.isItem   = false;
-     	alert("xmlファイルの読み込み失敗(rakuten)");
+      localStorage.isItem   = false;
+      alert("xmlファイルの読み込み失敗(rakuten)");
     },
     success:function(xml){
-    	var item = $(xml).find("Item:first");
-    	name = item.find("itemName").text();
-    	catchcopy = item.find("catchcopy").text();
-    	price = item.find("itemPrice").text();
-    	url = item.find("affiliateUrl").text();
-    	imgurl = item.find("imageUrl:first").text();
-      	//localstrage
-      	localStorage.isItem   = true;
-    	localStorage.itemname = name;
-  		localStorage.imgurl   = imgurl;
-  		localStorage.url      = url;
-  		localStorage.price    = price;
+      var item = $(xml).find("Item:first");
+      name = item.find("itemName").text();
+      catchcopy = item.find("catchcopy").text();
+      price = item.find("itemPrice").text();
+      url = item.find("affiliateUrl").text();
+      imgurl = item.find("imageUrl:first").text();
+      //localstrage
+      localStorage.isItem   = true;
+      localStorage.itemname = name;
+      localStorage.imgurl   = imgurl;
+      localStorage.url      = url;
+      localStorage.price    = price;
     }
   }); 
 }
@@ -101,8 +101,8 @@ function requestKeyPhrase(text) {
     timeout:1000,
     cache:false,
     error:function(){
-   		localStorage.isItem   = false;
-    	alert("xmlファイルの読み込み失敗(yahoo)");
+      localStorage.isItem   = false;
+      alert("xmlファイルの読み込み失敗(yahoo)");
     },
     success:function(xml){
       var phrase = $(xml).find("Keyphrase:first").text();
