@@ -1,6 +1,6 @@
 body {
   margin: 10px;
-  font: 84% Arial, sans-serif
+  font: 84% Arial, sans-serif;
 }
 
 p {
@@ -10,12 +10,21 @@ p {
 
 h1 img {
   margin: 1px 5px 0 1px;
-  vertical-align: middle
+  vertical-align: middle;
 }
 
 h2 {
   border-top: 1px solid #9cc2ef;
   background-color: #ebeff9;
   padding: 3px 5px;
-  font-size: 100%
+  font-size: 100%;
+}
+
+.itemimage {
+  margin: 10px;
+  float: left;
+}
+
+.itemtext {
+  float: left;
 }
