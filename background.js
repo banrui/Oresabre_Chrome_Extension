@@ -1,18 +1,28 @@
+function getRandomItem(obj) {
+  var objLength = 0;
+  var ary = new Array();
+  $(obj).find("Item").each(function() {
+    objLength++;
+    ary.push($(this));
+  });
+  var rand = Math.floor(Math.random() * objLength);
+  return ary[rand];
+}
+
 function show() {
   chrome.tabs.getSelected(null, function(tab) {  
     if (tab.url.indexOf('http://www.youtube.com/watch') == 0 || tab.url.indexOf('https://www.youtube.com/watch') == 0) {  
       var title = getYouTubeTitle(tab);
       requestKeyPhrase(title);
       if(localStorage.isItem) {
- 	var itemname = localStorage.getItem("itemname");
-	var imgurl   = localStorage.getItem("imgurl");
-  	var url      = localStorage.getItem("url");
-  	var price    = localStorage.getItem("price");	
-	var data = { image: '', text: '', url: '', price: ''};
-	data.image = imgurl;
-	data.text  = itemname;
-	data.url   = url;
-	data.price = price;
+	var item = getRandomItem(localStorage.rakutenProductJSON);
+console.log(item);
+	var data = {
+	  image: item.find("imageUrl:first").text(),
+	  text: item.find("imageName").text(),
+	  url: item.find("affiliateUrl").text(),
+	  price: item.find("itemPrice").text()
+	};
       }
 
       var notification = window.webkitNotifications.createHTMLNotification(
@@ -49,7 +59,6 @@ if (window.webkitNotifications) {
 }
 
 function getYouTubeTitle(tab) {
-  //var title = document.getElementById("watch-headline-title").innerText;
   var title = tab.title;
   return title;
 }
@@ -57,7 +66,7 @@ function getYouTubeTitle(tab) {
 function insertRakutenProducts(phrase) {
   var devid = "12e93771545fd01134acc95cb0e0f0f3";
   var afid = "11058cd3.4711ade0.11058cd4.94807d6a";
-  var format = "xml";
+  var format = "json";
 
   $.ajax({
     url:"https://app.rakuten.co.jp/services/api/IchibaItem/Search/20120723?applicationId=" + devid +
@@ -65,26 +74,16 @@ function insertRakutenProducts(phrase) {
       "&format=" + format +
       "&keyword=" + phrase,
     type:"get",
-    dataType:"xml",
+    dataType:"text",
     timeout:1000,
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      alert("xmlファイルの読み込み失敗(rakuten)");
+      alert("jsonの読み込み失敗(rakuten)");
     },
-    success:function(xml){
-      var item = $(xml).find("Item:first");
-      name = item.find("itemName").text();
-      catchcopy = item.find("catchcopy").text();
-      price = item.find("itemPrice").text();
-      url = item.find("affiliateUrl").text();
-      imgurl = item.find("imageUrl:first").text();
-      //localstrage
+    success:function(json){
       localStorage.isItem   = true;
-      localStorage.itemname = name;
-      localStorage.imgurl   = imgurl;
-      localStorage.url      = url;
-      localStorage.price    = price;
+      localStorage.rakutenProductJSON = json;
     }
   }); 
 }
