@@ -28,3 +28,7 @@ h2 {
 .itemtext {
   float: left;
 }
+
+.optiontext {
+  font-size: 15px;
+}

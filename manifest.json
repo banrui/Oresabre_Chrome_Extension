@@ -1,15 +1,13 @@
 {
-  "name": "Oresabre Notification",
+  "name": "Spring Shows Notification",
   "version": "1",
-  "description":
-  "Oresabre Extention",
+  "description": "Spring Shows is chrome extention which recommend item for you from Shopping site",
   "icons": {"16": "images/16.png", "48": "images/48.png", "128": "images/128.png"},
   "permissions": ["tabs", "http://www.google.com/*", "http://*/*", "https://*/*", "notifications"],
   "background": { "scripts": ["jquery-1.9.1.min.js", "notification.js", "background.js"] },
   "manifest_version": 2,
   "browser_action" : {
-    "default_icon" : "images/icon.png",
-    "popup" : "popup.html"
+    "default_icon" : "images/icon.png"
   },
   "options_page": "options.html",
   "web_accessible_resources" : ["images/48.png"]
