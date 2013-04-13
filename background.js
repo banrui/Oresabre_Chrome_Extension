@@ -1,12 +1,8 @@
-function getRandomItem(obj) {
-  var objLength = 0;
-  var ary = new Array();
-  $(obj).find("Item").each(function() {
-    objLength++;
-    ary.push($(this));
-  });
-  var rand = Math.floor(Math.random() * objLength);
-  return ary[rand];
+function getRandomItem(json) {
+  var obj = $.parseJSON(json);
+  var items = obj["Items"];
+  var rand = Math.floor(Math.random() * items.length);
+  return items[rand]["Item"];
 }
 
 function show() {
@@ -16,12 +12,11 @@ function show() {
       requestKeyPhrase(title);
       if(localStorage.isItem) {
 	var item = getRandomItem(localStorage.rakutenProductJSON);
-console.log(item);
 	var data = {
-	  image: item.find("imageUrl:first").text(),
-	  text: item.find("imageName").text(),
-	  url: item.find("affiliateUrl").text(),
-	  price: item.find("itemPrice").text()
+	  image: item["mediumImageUrls"][0]["imageUrl"],
+	  text: item["itemName"],
+	  url: item["affiliateUrl"],
+	  price: item["itemPrice"]
 	};
       }
 
@@ -79,7 +74,7 @@ function insertRakutenProducts(phrase) {
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      alert("jsonの読み込み失敗(rakuten)");
+      //alert("jsonの読み込み失敗(rakuten)");
     },
     success:function(json){
       localStorage.isItem   = true;
@@ -101,7 +96,7 @@ function requestKeyPhrase(text) {
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      alert("xmlファイルの読み込み失敗(yahoo)");
+      //alert("xmlファイルの読み込み失敗(yahoo)");
     },
     success:function(xml){
       var phrase = $(xml).find("Keyphrase:first").text();
