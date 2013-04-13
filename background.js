@@ -1,3 +1,7 @@
+// Base part written by The Chromium Authors. Oresabre team implemented.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 function getRandomItem(json) {
   var obj = $.parseJSON(json);
   var items = obj["Items"];
