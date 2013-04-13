@@ -70,7 +70,7 @@ function insertRakutenProducts(phrase) {
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      alert("xmlファイルの読み込み失敗(rakuten)");
+      //alert("読み込み失敗(rakuten)");
     },
     success:function(xml){
       var item = $(xml).find("Item:first");
@@ -102,7 +102,7 @@ function requestKeyPhrase(text) {
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      alert("xmlファイルの読み込み失敗(yahoo)");
+      //alert("読み込み失敗(yahoo)");
     },
     success:function(xml){
       var phrase = $(xml).find("Keyphrase:first").text();
