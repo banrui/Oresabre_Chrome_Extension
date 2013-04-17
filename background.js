@@ -89,8 +89,8 @@ function insertRakutenProducts(phrase) {
 
 function requestKeyPhrase(text) {
   var appid = "dj0zaiZpPW5jSFFvQVhYSnZENCZkPVlXazliekp0WW0xck4yVW1jR285TUEtLSZzPWNvbnN1bWVyc2VjcmV0Jng9NWY-";
-  text = encodeURI(text.replace(/\s|　/g,"。"));
   text = strChange(text);
+  text = encodeURI(text.replace(/\s|　/g,"。"));
 
   $.ajax({
     url:"http://jlp.yahooapis.jp/KeyphraseService/V1/extract?appid=" + appid +
@@ -115,6 +115,9 @@ function strChange(str) {
   var cr = '！”＃＄％＆’（）＊＋，－．／：；＜＝＞？＠［￥］＾＿｀｛｜｝～';
   for (var i = 0; i < c.length; i++) {
     while (str != (str = str.replace(c.substr(i,1), " ")));
+  }
+  for (var i = 0; i < cr.length; i++) {
+    while (str != (str = str.replace(cr.substr(i,1), " ")));
   }
   return str;
 }
