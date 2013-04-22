@@ -44,13 +44,13 @@ if (!localStorage.isInitialized) {
 }
 
 if (window.webkitNotifications) {
-  if (JSON.parse(localStorage.isActivated)) {
+  if (localStorage.isActivated) {
     show();
   }
   var interval = 0;
   setInterval(function() {
     interval = interval + 10;
-    if (JSON.parse(localStorage.isActivated) && localStorage.frequency <= interval) {
+    if (localStorage.isActivated && localStorage.frequency <= interval) {
       show();
       interval = 0;
     }
@@ -74,7 +74,7 @@ function insertRakutenProducts(phrase) {
       "&keyword=" + phrase,
     type:"get",
     dataType:"text",
-    timeout:1000,
+    timeout:10000,
     cache:false,
     error:function(){
       localStorage.isItem   = false;
@@ -97,7 +97,7 @@ function requestKeyPhrase(text) {
       "&sentence=" + text,
     type:"get",
     dataType:"xml",
-    timeout:1000,
+    timeout:10000,
     cache:false,
     error:function(){
       localStorage.isItem   = false;
