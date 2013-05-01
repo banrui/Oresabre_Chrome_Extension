@@ -1,18 +1,27 @@
+// Base part written by The Chromium Authors. Oresabre team implemented.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+function getRandomItem(json) {
+  var obj = $.parseJSON(json);
+  var items = obj["Items"];
+  var rand = Math.floor(Math.random() * items.length);
+  return items[rand]["Item"];
+}
+
 function show() {
   chrome.tabs.getSelected(null, function(tab) {  
     if (tab.url.indexOf('http://www.youtube.com/watch') == 0 || tab.url.indexOf('https://www.youtube.com/watch') == 0) {  
       var title = getYouTubeTitle(tab);
       requestKeyPhrase(title);
       if(localStorage.isItem) {
- 	var itemname = localStorage.getItem("itemname");
-	var imgurl   = localStorage.getItem("imgurl");
-  	var url      = localStorage.getItem("url");
-  	var price    = localStorage.getItem("price");	
-	var data = { image: '', text: '', url: '', price: ''};
-	data.image = imgurl;
-	data.text  = itemname;
-	data.url   = url;
-	data.price = price;
+	var item = getRandomItem(localStorage.rakutenProductJSON);
+	var data = {
+	  image: item["mediumImageUrls"][0]["imageUrl"],
+	  text: item["itemName"],
+	  url: item["affiliateUrl"],
+	  price: item["itemPrice"]
+	};
       }
 
       var notification = window.webkitNotifications.createHTMLNotification(
@@ -35,13 +44,13 @@ if (!localStorage.isInitialized) {
 }
 
 if (window.webkitNotifications) {
-  if (JSON.parse(localStorage.isActivated)) {
+  if (localStorage.isActivated) {
     show();
   }
   var interval = 0;
   setInterval(function() {
     interval = interval + 10;
-    if (JSON.parse(localStorage.isActivated) && localStorage.frequency <= interval) {
+    if (localStorage.isActivated && localStorage.frequency <= interval) {
       show();
       interval = 0;
     }
@@ -49,7 +58,6 @@ if (window.webkitNotifications) {
 }
 
 function getYouTubeTitle(tab) {
-  //var title = document.getElementById("watch-headline-title").innerText;
   var title = tab.title;
   return title;
 }
@@ -57,7 +65,7 @@ function getYouTubeTitle(tab) {
 function insertRakutenProducts(phrase) {
   var devid = "12e93771545fd01134acc95cb0e0f0f3";
   var afid = "11058cd3.4711ade0.11058cd4.94807d6a";
-  var format = "xml";
+  var format = "json";
 
   $.ajax({
     url:"https://app.rakuten.co.jp/services/api/IchibaItem/Search/20120723?applicationId=" + devid +
@@ -65,32 +73,23 @@ function insertRakutenProducts(phrase) {
       "&format=" + format +
       "&keyword=" + phrase,
     type:"get",
-    dataType:"xml",
-    timeout:1000,
+    dataType:"text",
+    timeout:10000,
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      //alert("読み込み失敗(rakuten)");
+      //alert("jsonの読み込み失敗(rakuten)");
     },
-    success:function(xml){
-      var item = $(xml).find("Item:first");
-      name = item.find("itemName").text();
-      catchcopy = item.find("catchcopy").text();
-      price = item.find("itemPrice").text();
-      url = item.find("affiliateUrl").text();
-      imgurl = item.find("imageUrl:first").text();
-      //localstrage
+    success:function(json){
       localStorage.isItem   = true;
-      localStorage.itemname = name;
-      localStorage.imgurl   = imgurl;
-      localStorage.url      = url;
-      localStorage.price    = price;
+      localStorage.rakutenProductJSON = json;
     }
   }); 
 }
 
 function requestKeyPhrase(text) {
   var appid = "dj0zaiZpPW5jSFFvQVhYSnZENCZkPVlXazliekp0WW0xck4yVW1jR285TUEtLSZzPWNvbnN1bWVyc2VjcmV0Jng9NWY-";
+  text = strChange(text);
   text = encodeURI(text.replace(/\s|　/g,"。"));
 
   $.ajax({
@@ -98,11 +97,11 @@ function requestKeyPhrase(text) {
       "&sentence=" + text,
     type:"get",
     dataType:"xml",
-    timeout:1000,
+    timeout:10000,
     cache:false,
     error:function(){
       localStorage.isItem   = false;
-      //alert("読み込み失敗(yahoo)");
+      //alert("xmlファイルの読み込み失敗(yahoo)");
     },
     success:function(xml){
       var phrase = $(xml).find("Keyphrase:first").text();
@@ -116,4 +115,16 @@ chrome.browserAction.onClicked.addListener(function(activeTab)
     var newURL = "options.html";
     chrome.tabs.create({ url: newURL });
 });
+
+function strChange(str) {
+  var c = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+  var cr = '！”＃＄％＆’（）＊＋，－．／：；＜＝＞？＠［￥］＾＿｀｛｜｝～';
+  for (var i = 0; i < c.length; i++) {
+    while (str != (str = str.replace(c.substr(i,1), " ")));
+  }
+  for (var i = 0; i < cr.length; i++) {
+    while (str != (str = str.replace(cr.substr(i,1), " ")));
+  }
+  return str;
+}
 
